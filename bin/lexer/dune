@@ -1,0 +1,4 @@
+(library
+ (name sand_lexer)
+ (public_name sand.lexer)
+ (libraries sand.types))

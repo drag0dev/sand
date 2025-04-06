@@ -1,4 +1,4 @@
 (executable
  (public_name sand)
  (name main)
- (libraries sand))
+ (libraries sand.types sand.lexer))
