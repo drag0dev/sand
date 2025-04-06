@@ -15,6 +15,7 @@ type t =
     | ShiftRight
     | BitwiseNAND
     | BitwiseNOR
+    | BitwiseXNOR
 
     (* unary operators *)
     | BitwiseComplement (* NOT *)
@@ -43,6 +44,7 @@ let to_string = function
     | ShiftRight -> "SHIFT_RIGHT"
     | BitwiseNAND -> "BITWISE_NAND"
     | BitwiseNOR -> "BITWISE_NOR"
+    | BitwiseXNOR -> "BITWISE_XNOR"
     | BitwiseComplement -> "NOT"
     | OpeningParenthesis -> "("
     | ClosingParenthesis -> ")"

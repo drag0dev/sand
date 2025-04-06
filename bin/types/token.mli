@@ -15,6 +15,7 @@ type t =
     | ShiftRight
     | BitwiseNAND
     | BitwiseNOR
+    | BitwiseXNOR
 
     (* unary operators *)
     | BitwiseComplement (* NOT *)
