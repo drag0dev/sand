@@ -1,0 +1,4 @@
+(executable
+ (public_name sand)
+ (name main)
+ (libraries sand))
