@@ -8,10 +8,13 @@ let parse_hex_num input =
         | l -> (l, len, List.rev acc) in
     let (l, len, num) = find_len input 0 [] in
     let num = '0' :: 'x' :: num in
-    let len = len + 2 in
-    let num = num |> List.to_seq |> String.of_seq in
-    let num = Z.of_substring num ~pos:0 ~len:len in
-    (l, len, Sand_types.Token.Number num);;
+    match len == 0 with
+    | true -> Error "Missing a digit"
+    | false ->
+        let len = len + 2 in
+        let num = num |> List.to_seq |> String.of_seq in
+        let num = Z.of_substring num ~pos:0 ~len:len in
+        Ok (l, len, Sand_types.Token.Number num);;
 
 let parse_oct_num input =
     let rec find_len input len acc =
@@ -21,10 +24,13 @@ let parse_oct_num input =
         | l -> (l, len, List.rev acc) in
     let (l, len, num) = find_len input 0 [] in
     let num = '0' :: 'o' :: num in
-    let len = len + 2 in
-    let num = num |> List.to_seq |> String.of_seq in
-    let num = Z.of_substring num ~pos:0 ~len:len in
-    (l, len, Sand_types.Token.Number num);;
+    match len == 0 with
+    | true -> Error "Missing a digit"
+    | false ->
+        let len = len + 2 in
+        let num = num |> List.to_seq |> String.of_seq in
+        let num = Z.of_substring num ~pos:0 ~len:len in
+        Ok (l, len, Sand_types.Token.Number num);;
 
 let parse_bin_num input =
     let rec find_len input len acc =
@@ -34,10 +40,13 @@ let parse_bin_num input =
         | l -> (l, len, List.rev acc) in
     let (l, len, num) = find_len input 0 [] in
     let num = '0' :: 'b' :: num in
-    let len = len + 2 in
-    let num = num |> List.to_seq |> String.of_seq in
-    let num = Z.of_substring num ~pos:0 ~len:len in
-    (l, len, Sand_types.Token.Number num);;
+    match len == 0 with
+    | true -> Error "Missing a digit"
+    | false ->
+        let len = len + 2 in
+        let num = num |> List.to_seq |> String.of_seq in
+        let num = Z.of_substring num ~pos:0 ~len:len in
+        Ok (l, len, Sand_types.Token.Number num);;
 
 let parse_dec_num input =
     let rec find_len input len acc =
@@ -63,17 +72,23 @@ let rec tokenize_aux input pos acc =
                 let acc = tk :: acc in
                 tokenize_aux t (pos+4) acc
         | '0' :: 'x' :: t ->
-                let (input, move, tk) = parse_hex_num t in
-                let acc = tk :: acc in
-                tokenize_aux input (pos+move) acc
+                (match parse_hex_num t with
+                | Error msg -> Error (msg, pos+1)
+                | Ok (input, move, tk) ->
+                    let acc = tk :: acc in
+                    tokenize_aux input (pos+move) acc)
         | '0' :: 'o' :: t ->
-                let (input, move, tk) = parse_oct_num t in
-                let acc = tk :: acc in
-                tokenize_aux input (pos+move) acc
+                (match parse_oct_num t with
+                | Error msg -> Error (msg, pos+1)
+                | Ok (input, move, tk) ->
+                    let acc = tk :: acc in
+                    tokenize_aux input (pos+move) acc)
         | '0' :: 'b' :: t ->
-                let (input, move, tk) = parse_bin_num t in
-                let acc = tk :: acc in
-                tokenize_aux input (pos+move) acc
+                (match parse_bin_num t with
+                | Error msg -> Error (msg, pos+1)
+                | Ok (input, move, tk) ->
+                    let acc = tk :: acc in
+                    tokenize_aux input (pos+move) acc)
         | '<' :: '<' :: t ->
                 let tk = Sand_types.Token.ShiftLeft in
                 let acc = tk :: acc in
