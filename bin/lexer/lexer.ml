@@ -52,7 +52,7 @@ let parse_dec_num input =
 
 let rec tokenize_aux input pos acc =
     match input with
-        | [] -> List.rev acc
+        | [] -> Ok (List.rev acc)
         | ' ' :: t -> tokenize_aux t (pos+1) acc
         | 'a' :: 'n' :: 's' :: t ->
                 let tk = Sand_types.Token.Ans in
@@ -65,15 +65,15 @@ let rec tokenize_aux input pos acc =
         | '0' :: 'x' :: t ->
                 let (input, move, tk) = parse_hex_num t in
                 let acc = tk :: acc in
-                tokenize_aux input (pos+2+move) acc
+                tokenize_aux input (pos+move) acc
         | '0' :: 'o' :: t ->
                 let (input, move, tk) = parse_oct_num t in
                 let acc = tk :: acc in
-                tokenize_aux input (pos+2+move) acc
+                tokenize_aux input (pos+move) acc
         | '0' :: 'b' :: t ->
                 let (input, move, tk) = parse_bin_num t in
                 let acc = tk :: acc in
-                tokenize_aux input (pos+2+move) acc
+                tokenize_aux input (pos+move) acc
         | '<' :: '<' :: t ->
                 let tk = Sand_types.Token.ShiftLeft in
                 let acc = tk :: acc in
@@ -146,8 +146,8 @@ let rec tokenize_aux input pos acc =
                 let (input, move, tk) = parse_dec_num (c::t) in
                 let acc = tk :: acc in
                 tokenize_aux input (pos+move) acc
-        | _ -> assert false;;
+        | _ -> Error ("Unknown symbol", pos)
 
-let tokenize (input : string) : token list =
+let tokenize (input : string) : (token list, string * int) result =
     let input = input |> String.lowercase_ascii |> String.to_seq |> List.of_seq in
     tokenize_aux input 0 [];;
