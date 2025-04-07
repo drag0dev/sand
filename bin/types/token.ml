@@ -1,5 +1,5 @@
 type t =
-    | Number of int
+    | Number of Z.t
 
     (* binary operators *)
     | Addition
@@ -30,7 +30,7 @@ type t =
 
 
 let to_string = function
-    | Number n -> "NUMBER(" ^ string_of_int n ^ ")"
+    | Number n -> "NUMBER(" ^ Z.to_string n ^ ")"
     | Addition -> "ADDITION"
     | Subtraction -> "SUBTRACTION"
     | Multiplication -> "MULTIPLICATION"

@@ -1,5 +1,5 @@
 type t =
-    | Number of int
+    | Number of Z.t
 
     (* binary operators *)
     | Addition

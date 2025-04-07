@@ -1,16 +1,54 @@
 type token = Sand_types.Token.t;;
 
 let parse_hex_num input =
-    (input, 0, Sand_types.Token.Number 1);;
+    let rec find_len input len acc =
+        match input with
+        | [] -> ([], len, List.rev acc)
+        | c :: t when (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') -> find_len t (len+1) (c :: acc)
+        | l -> (l, len, List.rev acc) in
+    let (l, len, num) = find_len input 0 [] in
+    let num = '0' :: 'x' :: num in
+    let len = len + 2 in
+    let num = num |> List.to_seq |> String.of_seq in
+    let num = Z.of_substring num ~pos:0 ~len:len in
+    (l, len, Sand_types.Token.Number num);;
 
 let parse_oct_num input =
-    (input, 0, Sand_types.Token.Number 1);;
+    let rec find_len input len acc =
+        match input with
+        | [] -> ([], len, List.rev acc)
+        | c :: t when c >= '0' && c <= '7' -> find_len t (len+1) (c :: acc)
+        | l -> (l, len, List.rev acc) in
+    let (l, len, num) = find_len input 0 [] in
+    let num = '0' :: 'o' :: num in
+    let len = len + 2 in
+    let num = num |> List.to_seq |> String.of_seq in
+    let num = Z.of_substring num ~pos:0 ~len:len in
+    (l, len, Sand_types.Token.Number num);;
 
 let parse_bin_num input =
-    (input, 0, Sand_types.Token.Number 1);;
+    let rec find_len input len acc =
+        match input with
+        | [] -> ([], len, List.rev acc)
+        | c :: t when c >= '0' && c <= '1' -> find_len t (len+1) (c :: acc)
+        | l -> (l, len, List.rev acc) in
+    let (l, len, num) = find_len input 0 [] in
+    let num = '0' :: 'b' :: num in
+    let len = len + 2 in
+    let num = num |> List.to_seq |> String.of_seq in
+    let num = Z.of_substring num ~pos:0 ~len:len in
+    (l, len, Sand_types.Token.Number num);;
 
 let parse_dec_num input =
-    (input, 0, Sand_types.Token.Number 1);;
+    let rec find_len input len acc =
+        match input with
+        | [] -> ([], len, List.rev acc)
+        | c :: t when c >= '0' && c <='9' -> find_len t (len+1) (c :: acc)
+        | l -> (l, len, List.rev acc) in
+    let (l, len, num) = find_len input 0 [] in
+    let num = num |> List.to_seq |> String.of_seq in
+    let num = Z.of_substring num ~pos:0 ~len:len in
+    (l, len, Sand_types.Token.Number num);;
 
 let rec tokenize_aux input pos acc =
     match input with
@@ -105,7 +143,7 @@ let rec tokenize_aux input pos acc =
                 let acc = tk :: acc in
                 tokenize_aux t (pos+1) acc
         | c :: t when c >= '0' && c <= '9' ->
-                let (input, move, tk) = parse_dec_num t in
+                let (input, move, tk) = parse_dec_num (c::t) in
                 let acc = tk :: acc in
                 tokenize_aux input (pos+move) acc
         | _ -> assert false;;
