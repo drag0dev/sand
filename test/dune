@@ -1,3 +1,7 @@
 (test
  (name test_lexer)
  (libraries alcotest sand.lexer sand.types zarith))
+
+(test
+ (name test_shunting)
+ (libraries alcotest sand.evaluator sand.types zarith))
