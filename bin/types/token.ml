@@ -19,6 +19,8 @@ type t =
 
     (* unary operators *)
     | BitwiseComplement (* NOT *)
+    | Positive
+    | Negative
 
     (* other operators *)
     | OpeningParenthesis
@@ -48,6 +50,8 @@ let to_string = function
     | BitwiseComplement -> "NOT"
     | OpeningParenthesis -> "("
     | ClosingParenthesis -> ")"
+    | Positive -> "POSITIVE"
+    | Negative -> "NEGATIVE"
     | Ans -> "ANS"
     | Exit -> "EXIT"
 

@@ -19,6 +19,8 @@ type t =
 
     (* unary operators *)
     | BitwiseComplement (* NOT *)
+    | Positive
+    | Negative
 
     (* other operators *)
     | OpeningParenthesis
