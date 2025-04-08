@@ -4,6 +4,9 @@ let parse_hex_num input =
     let rec find_len input len acc =
         match input with
         | [] -> ([], len, List.rev acc)
+        | '0' :: 'x' :: _ -> (input, len, List.rev acc)
+        | '0' :: 'b' :: _ -> (input, len, List.rev acc)
+        | '0' :: 'o' :: _ -> (input, len, List.rev acc)
         | c :: t when (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') -> find_len t (len+1) (c :: acc)
         | l -> (l, len, List.rev acc) in
     let (l, len, num) = find_len input 0 [] in
@@ -20,6 +23,9 @@ let parse_oct_num input =
     let rec find_len input len acc =
         match input with
         | [] -> ([], len, List.rev acc)
+        | '0' :: 'x' :: _ -> (input, len, List.rev acc)
+        | '0' :: 'b' :: _ -> (input, len, List.rev acc)
+        | '0' :: 'o' :: _ -> (input, len, List.rev acc)
         | c :: t when c >= '0' && c <= '7' -> find_len t (len+1) (c :: acc)
         | l -> (l, len, List.rev acc) in
     let (l, len, num) = find_len input 0 [] in
@@ -36,6 +42,9 @@ let parse_bin_num input =
     let rec find_len input len acc =
         match input with
         | [] -> ([], len, List.rev acc)
+        | '0' :: 'x' :: _ -> (input, len, List.rev acc)
+        | '0' :: 'b' :: _ -> (input, len, List.rev acc)
+        | '0' :: 'o' :: _ -> (input, len, List.rev acc)
         | c :: t when c >= '0' && c <= '1' -> find_len t (len+1) (c :: acc)
         | l -> (l, len, List.rev acc) in
     let (l, len, num) = find_len input 0 [] in
