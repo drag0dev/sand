@@ -9,13 +9,14 @@ let pp_token fmt tk = Format.fprintf fmt "{ token = %s; offset: %d } " (Sand_typ
 let test_token = testable pp_token equal_token
 
 let token_list = list test_token
+let token_list_bool = pair token_list bool
 
 let string_int = pair string int
 
-let result_token_list = result token_list string_int
+let result_token_list = result token_list_bool string_int
 
 let empty () =
-    let expected = Ok [] in
+    let expected = Ok ([], false) in
     let actual = infix_to_postfix [] in
     check result_token_list "empty" expected actual
 
@@ -25,10 +26,10 @@ let one_unary () =
         {token = BitwiseComplement; offset = 0};
         {token = Number num; offset = 1};
     ] in
-    let expected = Ok [
+    let expected = Ok ([
         {token = Number num; offset = 1};
         {token = BitwiseComplement; offset = 0};
-    ] in
+    ], false) in
     let actual = infix_to_postfix input in
     check result_token_list "one unary" expected actual
 
@@ -40,13 +41,13 @@ let simple_precedence_one () =
         {token = Multiplication; offset = 3};
         {token = Number (Z.of_string "2"); offset = 4};
     ] in
-    let expected = Ok [
+    let expected = Ok ([
         {token = Number (Z.of_string "3"); offset = 0};
         {token = Number (Z.of_string "4"); offset = 2};
         {token = Number (Z.of_string "2"); offset = 4};
         {token = Multiplication; offset = 3};
         {token = Addition; offset = 1};
-    ] in
+    ], false) in
     let actual = infix_to_postfix input in
     check result_token_list "simple precedence one" expected actual
 
@@ -58,13 +59,13 @@ let simple_precedence_two () =
         {token = Addition; offset = 3};
         {token = Number (Z.of_string "2"); offset = 4};
     ] in
-    let expected = Ok [
+    let expected = Ok ([
         {token = Number (Z.of_string "3"); offset = 0};
         {token = Number (Z.of_string "4"); offset = 2};
         {token = Multiplication; offset = 1};
         {token = Number (Z.of_string "2"); offset = 4};
         {token = Addition; offset = 3};
-    ] in
+    ], false) in
     let actual = infix_to_postfix input in
     check result_token_list "simple precedence two" expected actual
 
@@ -76,13 +77,13 @@ let simple_precedence_three () =
         {token = BitwiseOR; offset = 3};
         {token = Number (Z.of_string "2"); offset = 4};
     ] in
-    let expected = Ok [
+    let expected = Ok ([
         {token = Number (Z.of_string "3"); offset = 0};
         {token = Number (Z.of_string "4"); offset = 2};
         {token = BitwiseAND; offset = 1};
         {token = Number (Z.of_string "2"); offset = 4};
         {token = BitwiseOR; offset = 3};
-    ] in
+    ], false) in
     let actual = infix_to_postfix input in
     check result_token_list "simple precedence three" expected actual
 
@@ -93,12 +94,12 @@ let simple_precedence_four () =
         {token = Addition; offset = 2};
         {token = Number (Z.of_string "2"); offset = 3};
     ] in
-    let expected = Ok [
+    let expected = Ok ([
         {token = Number (Z.of_string "3"); offset = 1};
         {token = BitwiseComplement; offset = 0};
         {token = Number (Z.of_string "2"); offset = 3};
         {token = Addition; offset = 2};
-    ] in
+    ], false) in
     let actual = infix_to_postfix input in
     check result_token_list "simple precedence four" expected actual
 
@@ -108,11 +109,11 @@ let simple_precedence_five () =
         {token = Negative; offset = 1};
         {token = Number (Z.of_string "3"); offset = 2};
     ] in
-    let expected = Ok [
+    let expected = Ok ([
         {token = Number (Z.of_string "3"); offset = 2};
         {token = Negative; offset = 1};
         {token = BitwiseComplement; offset = 0};
-    ] in
+    ], false) in
     let actual = infix_to_postfix input in
     check result_token_list "simple precedence five" expected actual
 
@@ -131,7 +132,7 @@ let simple_parens () =
         {token = ClosingParenthesis; offset = 10};
 
     ] in
-    let expected = Ok [
+    let expected = Ok ([
         {token = Number (Z.of_string "2"); offset = 0};
         {token = Number (Z.of_string "3"); offset = 3};
         {token = Number (Z.of_string "4"); offset = 6};
@@ -139,7 +140,7 @@ let simple_parens () =
         {token = Subtraction; offset = 7};
         {token = Multiplication; offset = 4};
         {token = Multiplication; offset = 1};
-    ] in
+    ], false) in
     let actual = infix_to_postfix input in
     check result_token_list "simple paren" expected actual
 
@@ -159,7 +160,7 @@ let complex_precedence () =
         {token = ClosingParenthesis; offset = 11};
 
     ] in
-    let expected = Ok [
+    let expected = Ok ([
         {token = Number (Z.of_string "2"); offset = 2};
         {token = Number (Z.of_string "3"); offset = 4};
         {token = BitwiseAND; offset = 3};
@@ -168,7 +169,7 @@ let complex_precedence () =
         {token = Number (Z.of_string "1"); offset = 10};
         {token = ShiftLeft; offset = 9};
         {token = BitwiseOR; offset = 6};
-    ] in
+    ], false) in
     let actual = infix_to_postfix input in
     check result_token_list "complex precedence" expected actual
 

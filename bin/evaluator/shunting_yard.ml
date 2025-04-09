@@ -84,10 +84,11 @@ let rec shunting_yard input prev_tk output_q op_stack =
             else
                 (match drain_remaining op_stack output_q with
                 | Error e -> Error e
-                | Ok output_q -> Ok (List.rev output_q))
+                | Ok output_q -> Ok (List.rev output_q, false))
     | tk :: t ->
             let {token; offset} = tk in
             match token with
+            | Exit -> shunting_yard [] prev_tk output_q op_stack
             | Number _ ->
                     if prev_tk = Operand || prev_tk = RightParen
                     then
@@ -131,5 +132,5 @@ let rec shunting_yard input prev_tk output_q op_stack =
                     let op_stack = tk :: op_stack in
                     shunting_yard t Operator output_q op_stack;;
 
-let infix_to_postfix (input : token list) : (token list, string * int) result =
+let infix_to_postfix (input : token list) : (token list * bool, string * int) result =
     shunting_yard input None [] [];;
