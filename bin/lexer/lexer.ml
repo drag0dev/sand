@@ -1,4 +1,5 @@
-type token = Sand_types.Token.located_token;;
+open Sand_types.Token
+type token = located_token
 
 let parse_hex_num input =
     let rec find_len input len acc =
@@ -17,7 +18,7 @@ let parse_hex_num input =
         let len = len + 2 in
         let num = num |> List.to_seq |> String.of_seq in
         let num = Z.of_substring num ~pos:0 ~len:len in
-        Ok (l, len, Sand_types.Token.Number num);;
+        Ok (l, len, Number num);;
 
 let parse_oct_num input =
     let rec find_len input len acc =
@@ -36,7 +37,7 @@ let parse_oct_num input =
         let len = len + 2 in
         let num = num |> List.to_seq |> String.of_seq in
         let num = Z.of_substring num ~pos:0 ~len:len in
-        Ok (l, len, Sand_types.Token.Number num);;
+        Ok (l, len, Number num);;
 
 let parse_bin_num input =
     let rec find_len input len acc =
@@ -55,7 +56,7 @@ let parse_bin_num input =
         let len = len + 2 in
         let num = num |> List.to_seq |> String.of_seq in
         let num = Z.of_substring num ~pos:0 ~len:len in
-        Ok (l, len, Sand_types.Token.Number num);;
+        Ok (l, len, Number num);;
 
 let parse_dec_num input =
     let rec find_len input len acc =
@@ -66,131 +67,131 @@ let parse_dec_num input =
     let (l, len, num) = find_len input 0 [] in
     let num = num |> List.to_seq |> String.of_seq in
     let num = Z.of_substring num ~pos:0 ~len:len in
-    (l, len, Sand_types.Token.Number num);;
+    (l, len, Number num);;
 
 let rec tokenize_aux input pos acc =
     match input with
         | [] -> Ok (List.rev acc)
         | ' ' :: t -> tokenize_aux t (pos+1) acc
         | 'a' :: 'n' :: 's' :: t ->
-                let tk = Sand_types.Token.Ans in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = Ans in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+3) acc
         | 'e' :: 'x' :: 'i' :: 't' :: t ->
-                let tk = Sand_types.Token.Exit in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = Exit in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+4) acc
         | '0' :: 'x' :: t ->
                 (match parse_hex_num t with
                 | Error msg -> Error (msg, pos+1)
                 | Ok (input, move, tk) ->
-                    let tk = {Sand_types.Token.token = tk; offset = pos} in
+                    let tk = {token = tk; offset = pos} in
                     let acc = tk :: acc in
                     tokenize_aux input (pos+move) acc)
         | '0' :: 'o' :: t ->
                 (match parse_oct_num t with
                 | Error msg -> Error (msg, pos+1)
                 | Ok (input, move, tk) ->
-                    let tk = {Sand_types.Token.token = tk; offset = pos} in
+                    let tk = {token = tk; offset = pos} in
                     let acc = tk :: acc in
                     tokenize_aux input (pos+move) acc)
         | '0' :: 'b' :: t ->
                 (match parse_bin_num t with
                 | Error msg -> Error (msg, pos+1)
                 | Ok (input, move, tk) ->
-                    let tk = {Sand_types.Token.token = tk; offset = pos} in
+                    let tk = {token = tk; offset = pos} in
                     let acc = tk :: acc in
                     tokenize_aux input (pos+move) acc)
         | '<' :: '<' :: t ->
-                let tk = Sand_types.Token.ShiftLeft in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = ShiftLeft in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+2) acc
         | '>' :: '>' :: t ->
-                let tk = Sand_types.Token.ShiftRight in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = ShiftRight in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+2) acc
         | '*' :: '*' :: t ->
-                let tk = Sand_types.Token.Exponent in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = Exponent in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+2) acc
         | '!' :: '&' :: t ->
-                let tk = Sand_types.Token.BitwiseNAND in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = BitwiseNAND in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+2) acc
         | '!' :: '|' :: t ->
-                let tk = Sand_types.Token.BitwiseNOR in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = BitwiseNOR in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+2) acc
         | '!' :: '^' :: t ->
-                let tk = Sand_types.Token.BitwiseXNOR in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = BitwiseXNOR in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+2) acc
         | '+' :: t ->
-                let tk = Sand_types.Token.Addition in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = Addition in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+1) acc
         | '-' :: t ->
-                let tk = Sand_types.Token.Subtraction in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = Subtraction in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+1) acc
         | '*' :: t ->
-                let tk = Sand_types.Token.Multiplication in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = Multiplication in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+1) acc
         | '/' :: t ->
-                let tk = Sand_types.Token.FloorDivision in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = FloorDivision in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+1) acc
         | '%' :: t ->
-                let tk = Sand_types.Token.Modulo in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = Modulo in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+1) acc
         | '&' :: t ->
-                let tk = Sand_types.Token.BitwiseAND in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = BitwiseAND in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+1) acc
         | '|' :: t ->
-                let tk = Sand_types.Token.BitwiseOR in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = BitwiseOR in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+1) acc
         | '^' :: t ->
-                let tk = Sand_types.Token.BitwiseXOR in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = BitwiseXOR in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+1) acc
         | '~' :: t ->
-                let tk = Sand_types.Token.BitwiseComplement in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = BitwiseComplement in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+1) acc
         | '(' :: t ->
-                let tk = Sand_types.Token.OpeningParenthesis in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = OpeningParenthesis in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+1) acc
         | ')' :: t ->
-                let tk = Sand_types.Token.ClosingParenthesis in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = ClosingParenthesis in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+1) acc
         | c :: t when c >= '0' && c <= '9' ->
                 let (input, move, tk) = parse_dec_num (c::t) in
-                let tk = {Sand_types.Token.token = tk; offset = pos} in
+                let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux input (pos+move) acc
         | _ -> Error ("Unknown symbol", pos);;
