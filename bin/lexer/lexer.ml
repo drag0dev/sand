@@ -115,7 +115,7 @@ let rec tokenize_aux input pos acc =
                 let acc = tk :: acc in
                 tokenize_aux t (pos+2) acc
         | '*' :: '*' :: t ->
-                let tk = Exponent in
+                let tk = Pow in
                 let tk = {token = tk; offset = pos} in
                 let acc = tk :: acc in
                 tokenize_aux t (pos+2) acc

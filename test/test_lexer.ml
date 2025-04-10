@@ -75,7 +75,7 @@ let two_char_ops () =
     let tokens = [
         {token = ShiftLeft; offset = 0};
         {token = ShiftRight; offset = 2};
-        {token = Exponent; offset = 4};
+        {token = Pow; offset = 4};
         {token = BitwiseNAND; offset = 6};
         {token = BitwiseNOR; offset = 8};
         {token = BitwiseXNOR; offset = 10};
@@ -104,8 +104,8 @@ let single_char_ops () =
 
 let mod_and_mult () =
     let tokens = [
-        {token = Exponent; offset = 0};
-        {token = Exponent; offset = 2};
+        {token = Pow; offset = 0};
+        {token = Pow; offset = 2};
         {token = Multiplication; offset = 4};
     ] in
     let expected = Ok tokens in
@@ -115,7 +115,7 @@ let mod_and_mult () =
 let expression_no_spaces () =
     let tokens = [
         {token = Number(Z.of_string "0x10"); offset = 0};
-        {token = Exponent; offset = 4};
+        {token = Pow; offset = 4};
         {token = Number(Z.of_string "0b1010"); offset = 6};
         {token = Multiplication; offset = 12};
         {token = Ans; offset = 13};
@@ -127,7 +127,7 @@ let expression_no_spaces () =
 let expression_with_spaces () =
     let tokens = [
         {token = Number(Z.of_string "0x10"); offset = 0};
-        {token = Exponent; offset = 5};
+        {token = Pow; offset = 5};
         {token = Number(Z.of_string "0b1010"); offset = 8};
         {token = Multiplication; offset = 15};
         {token = Ans; offset = 17};

@@ -86,20 +86,20 @@ let mod_by_zero () =
     check result_token_list "mod by zero" expected actual
 
 let negative_exponent () =
-    let expected = Error ("Exponent cannot be negative", 1) in
+    let expected = Error ("Pow cannot be negative", 1) in
     let actual = eval [
         {token = Number (Z.of_string "5"); offset = 0};
         {token = Number (Z.of_string "-1"); offset = 2};
-        {token = Exponent; offset = 1};
+        {token = Pow; offset = 1};
     ] None in
     check result_token_list "negative exponent" expected actual
 
 let exponent_doesnt_fit_int () =
-    let expected = Error ("Exponent must fit into int63", 1) in
+    let expected = Error ("Pow must fit into int63", 1) in
     let actual = eval [
         {token = Number (Z.of_string "5"); offset = 0};
         {token = Number (Z.of_string "0xFFFFFFFFFFFFFFFF"); offset = 2};
-        {token = Exponent; offset = 1};
+        {token = Pow; offset = 1};
     ] None in
     check result_token_list "exponent that does not find int63" expected actual
 
@@ -158,7 +158,7 @@ let complex_expression_one () =
         {token = Number (Z.of_string "7"); offset = 4};
         {token = Number (Z.of_string "2"); offset = 5};
         {token = Subtraction; offset = 6};
-        {token = Exponent; offset = 7};
+        {token = Pow; offset = 7};
         {token = Multiplication; offset = 8};
     ] None in
     check result_token_list "complex expression one" expected actual
@@ -190,7 +190,7 @@ let complex_expression_three () =
         {token = Number (Z.of_string "7"); offset = 7};
         {token = BitwiseAND; offset = 8};
         {token = Number (Z.of_string "9"); offset = 9};
-        {token = Exponent; offset = 10};
+        {token = Pow; offset = 10};
     ] None in
     check result_token_list "complex expression three" expected actual
 
@@ -225,7 +225,7 @@ let suite = [
     "Division by zero", `Quick, div_by_zero;
     "Mod by zero", `Quick, mod_by_zero;
     "Negative exponent", `Quick, negative_exponent;
-    "Exponent that doesnt fit", `Quick, exponent_doesnt_fit_int;
+    "Pow that doesnt fit", `Quick, exponent_doesnt_fit_int;
     "Left shift by neg", `Quick, left_shift_by_neg;
     "Left shift by too large", `Quick, left_shift_by_too_large;
     "Right shift by neg", `Quick, right_shift_by_neg;

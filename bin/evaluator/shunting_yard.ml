@@ -7,7 +7,7 @@ let precedence = function
     | Multiplication -> 2
     | FloorDivision -> 2
     | Modulo -> 2
-    | Exponent -> 3
+    | Pow -> 3
     | BitwiseAND -> 1
     | BitwiseOR -> 1
     | BitwiseXOR -> 1

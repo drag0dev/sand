@@ -7,7 +7,7 @@ type t =
     | Multiplication
     | FloorDivision
     | Modulo
-    | Exponent
+    | Pow
     | BitwiseAND
     | BitwiseOR
     | BitwiseXOR

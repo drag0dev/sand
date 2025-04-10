@@ -7,7 +7,7 @@ type t =
     | Multiplication
     | FloorDivision
     | Modulo
-    | Exponent
+    | Pow
     | BitwiseAND
     | BitwiseOR
     | BitwiseXOR
@@ -38,7 +38,7 @@ let to_string = function
     | Multiplication -> "MULTIPLICATION"
     | FloorDivision -> "FLOOR_DIVISION"
     | Modulo -> "MODULO"
-    | Exponent -> "EXPONENT"
+    | Pow -> "Pow"
     | BitwiseAND -> "BITWISE_AND"
     | BitwiseOR -> "BITWISE_OR"
     | BitwiseXOR -> "BITWISE_XOR"

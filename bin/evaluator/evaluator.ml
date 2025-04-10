@@ -80,7 +80,7 @@ let rec aux_eval input prev_ans exit_found stack =
                                 let stack = operand :: operand_t in
                                 aux_eval t prev_ans false stack
                     | _ -> Error ("Missing operand", offset))
-            | Exponent ->
+            | Pow ->
                     (match stack with
                     | right :: left :: operand_t ->
                             if not (Z.fits_int right)
