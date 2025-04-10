@@ -7,7 +7,7 @@ let precedence = function
     | Multiplication -> 2
     | FloorDivision -> 2
     | Modulo -> 2
-    | Exponent -> 2
+    | Exponent -> 3
     | BitwiseAND -> 1
     | BitwiseOR -> 1
     | BitwiseXOR -> 1
@@ -16,11 +16,11 @@ let precedence = function
     | BitwiseNAND -> 1
     | BitwiseNOR -> 1
     | BitwiseXNOR -> 1
-    | BitwiseComplement -> 4
-    | OpeningParenthesis -> 3
-    | ClosingParenthesis -> 3
-    | Positive -> 4
-    | Negative -> 4
+    | BitwiseComplement -> 5
+    | OpeningParenthesis -> 4
+    | ClosingParenthesis -> 4
+    | Positive -> 5
+    | Negative -> 5
     | _ -> failwith "ans/exit/number are not operators";;
 
 type previous_token =
