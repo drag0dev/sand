@@ -5,3 +5,7 @@
 (test
  (name test_shunting)
  (libraries alcotest sand.evaluator sand.types zarith))
+
+(test
+ (name test_evaluator)
+ (libraries alcotest sand.evaluator sand.types zarith))
