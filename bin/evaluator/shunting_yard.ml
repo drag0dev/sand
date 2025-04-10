@@ -88,7 +88,14 @@ let rec shunting_yard input prev_tk output_q op_stack =
     | tk :: t ->
             let {token; offset} = tk in
             match token with
-            | Exit -> shunting_yard [] prev_tk output_q op_stack
+            | Exit ->
+                if prev_tk = Operator
+                then
+                    Error ("Expression cannot end with an operator", (-1))
+                else
+                    (match drain_remaining op_stack output_q with
+                    | Error e -> Error e
+                    | Ok output_q -> Ok (List.rev output_q, true))
             | Number _ ->
                     if prev_tk = Operand || prev_tk = RightParen
                     then
